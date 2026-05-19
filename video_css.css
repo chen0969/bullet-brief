@@ -1,0 +1,74 @@
+body {
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 900px;
+            max-width: 100%;
+            margin: auto;
+            background: black;
+            overflow: hidden;
+        }
+
+        video {
+            width: 100%;
+            display: block;
+        }
+
+        #danmu-layer {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 10;
+            /* Ensures danmu renders above the video elements */
+        }
+
+        .danmu {
+            position: absolute;
+            white-space: nowrap;
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+            /* Starts at the right edge of the video player container */
+            left: 100%;
+            text-shadow:
+                -2px -2px 0 black,
+                2px -2px 0 black,
+                -2px 2px 0 black,
+                2px 2px 0 black,
+                0px 0px 8px black;
+
+            animation: flyDanmu linear forwards;
+        }
+
+        @keyframes flyDanmu {
+            from {
+                transform: translateX(0%);
+            }
+
+            to {
+                /* Translates left by 100% of its OWN width, ensuring it fully clears the screen */
+                transform: translateX(-100%);
+                /* Moves left across the entire width of the video player container */
+                left: 0%;
+            }
+        }
+
+        .controls {
+            margin-bottom: 20px;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+        }
+
+        .status {
+            margin-top: 10px;
+            opacity: 0.8;
+        }
