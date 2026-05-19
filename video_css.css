@@ -45,6 +45,7 @@ body {
                 0px 0px 8px black;
 
             animation: flyDanmu linear forwards;
+            opacity: 0.5;
         }
 
         @keyframes flyDanmu {

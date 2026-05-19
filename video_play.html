@@ -6,21 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Danmu Video Player</title>
     <link rel="stylesheet" type="text/css" href="video_css.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 
 <body>
-    <header>
+    <header class="w-full bg-gray-800 text-white p-4 rounded-lg">
         <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="video_play.html">Video Play</a></li>
+            <ul class="flex flex-row gap-4">
+                <li><a class="outline-2 outline-offset-2 outline-blue-500 rounded-sm p-2" href="index.html">Home</a></li>
+                <li><a class="outline-2 outline-offset-2 outline-blue-500 rounded-sm p-2" href="video_play.html">Video Play</a></li>
             </ul>
         </nav>
     </header>
-    <h2>Danmu Video Player</h2>
+    <h2 class="text-2xl m-3">Danmu Video Player</h2>
 
     <div class="controls">
-        <input type="file" id="videoUpload" accept="video/*">
+        <input type="file" id="videoUpload" accept="video/*" class="outline-2 outline-offset-2 outline-blue-500 rounded-sm p-2 cursor-pointer hover:bg-blue-600" >
     </div>
 
     <div class="video-wrapper">

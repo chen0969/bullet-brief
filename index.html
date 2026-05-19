@@ -5,21 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Danmu HTML to JSON</title>
   <link rel="stylesheet" type="text/css" href="main.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 <body>
-    <header>
+    <header class="w-full bg-gray-800 text-white p-4 rounded-lg">
         <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="video_play.html">Video Play</a></li>
+            <ul class="flex flex-row gap-4">
+                <li><a class="outline-2 outline-offset-2 outline-blue-500 rounded-sm p-2" href="index.html">Home</a></li>
+                <li><a class="outline-2 outline-offset-2 outline-blue-500 rounded-sm p-2" href="video_play.html">Video Play</a></li>
             </ul>
         </nav>
     </header>
-  <h2>Danmu HTML → JSON</h2>
+  <h2 class="text-2xl m-3">Danmu HTML → JSON</h2>
 
-  <textarea id="htmlInput" placeholder="Paste your HTML here..."></textarea>
+  <textarea class="rounded-2xl border-black rounded-xl p-1" id="htmlInput" placeholder="Paste your HTML here..."></textarea>
 
-  <button id="saveBtn">Convert & Save</button>
+  <button class="outline-2 outline-offset-2 outline-blue-500 rounded-sm p-2" id="saveBtn">Convert & Save</button>
 
   <pre id="result"></pre>
 
