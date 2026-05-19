@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Danmu Video Player</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 900px;
+            max-width: 100%;
+            margin: auto;
+            background: black;
+            overflow: hidden;
+        }
+
+        video {
+            width: 100%;
+            display: block;
+        }
+
+        #danmu-layer {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 10; /* Ensures danmu renders above the video elements */
+        }
+
+        .danmu {
+            position: absolute;
+            white-space: nowrap;
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+            /* Starts at the right edge of the video player container */
+            left: 100%; 
+            text-shadow:
+                -2px -2px 0 black,
+                2px -2px 0 black,
+                -2px 2px 0 black,
+                2px 2px 0 black,
+                0px 0px 8px black;
+
+            animation: flyDanmu linear forwards;
+        }
+
+        @keyframes flyDanmu {
+            from {
+                transform: translateX(0%);
+            }
+
+            to {
+                /* Translates left by 100% of its OWN width, ensuring it fully clears the screen */
+                transform: translateX(-100%); 
+                /* Moves left across the entire width of the video player container */
+                left: 0%; 
+            }
+        }
+
+        .controls {
+            margin-bottom: 20px;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+        }
+
+        .status {
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="video_play.html">Video Play</a></li>
+            </ul>
+        </nav>
+    </header>
+    <h2>Danmu Video Player</h2>
+
+    <div class="controls">
+        <input type="file" id="videoUpload" accept="video/*">
+    </div>
+
+    <div class="video-wrapper">
+        <video id="video" controls></video>
+        <div id="danmu-layer"></div>
+    </div>
+
+    <div class="status" id="status"></div>
+
+    <script>
+        const video = document.getElementById('video');
+        const danmuLayer = document.getElementById('danmu-layer');
+        const status = document.getElementById('status');
+
+        // Load JSON from localStorage
+        const danmuData =
+            JSON.parse(localStorage.getItem('danmuData')) || [];
+
+        status.textContent =
+            `Loaded ${danmuData.length} danmu items`;
+
+        // Convert 0:00:05 → seconds
+        const timeToSeconds = (timeStr) => {
+            const parts = timeStr.split(':').map(Number);
+
+            if (parts.length === 3) {
+                const [h, m, s] = parts;
+                return h * 3600 + m * 60 + s;
+            }
+
+            if (parts.length === 2) {
+                const [m, s] = parts;
+                return m * 60 + s;
+            }
+
+            return 0;
+        };
+
+        // Preprocess timestamps
+        const danmuQueue = danmuData.map(item => ({
+            ...item,
+            seconds: timeToSeconds(item.time),
+            shown: false
+        }));
+
+        // Upload video
+        document
+            .getElementById('videoUpload')
+            .addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const url = URL.createObjectURL(file);
+                video.src = url;
+            });
+
+        // Create danmu
+        const createDanmu = (text) => {
+            const danmu = document.createElement('div');
+            danmu.className = 'danmu';
+            danmu.textContent = text;
+
+            // random vertical position (ensuring text doesn't overflow bottom)
+            const maxHeight =
+                danmuLayer.clientHeight - 40;
+
+            danmu.style.top =
+                `${Math.max(10, Math.random() * maxHeight)}px`;
+
+            // random speed
+            const duration =
+                (Math.random() * 4 + 6).toFixed(1);
+
+            danmu.style.animationDuration =
+                `${duration}s`;
+
+            danmuLayer.appendChild(danmu);
+
+            danmu.addEventListener(
+                'animationend',
+                () => danmu.remove()
+            );
+        };
+
+        // Show danmu at correct timing
+        video.addEventListener('timeupdate', () => {
+            const currentTime = video.currentTime;
+
+            danmuQueue.forEach(item => {
+                if (
+                    !item.shown &&
+                    currentTime >= item.seconds &&
+                    currentTime < item.seconds + 1 // Ensures it triggers reasonably close to time
+                ) {
+                    createDanmu(item.content);
+                    item.shown = true;
+                }
+            });
+        });
+
+        // Reset when replay or skip
+        video.addEventListener('seeked', () => {
+            const currentTime = video.currentTime;
+
+            danmuQueue.forEach(item => {
+                item.shown =
+                    item.seconds < currentTime;
+            });
+        });
+    </script>
+
+</body>
+
+</html>
